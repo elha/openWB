@@ -3496,6 +3496,7 @@
 							<option <?php if($wattbezugmodulold == "bezug_fems\n") echo "selected" ?> value="bezug_fems">Fenecon FEMS</option>
 							<option <?php if($wattbezugmodulold == "bezug_solarworld\n") echo "selected" ?> value="bezug_solarworld">Solarworld</option>
 							<option <?php if($wattbezugmodulold == "bezug_siemens\n") echo "selected" ?> value="bezug_siemens">Siemens Speicher</option>
+							<option <?php if($wattbezugmodulold == "bezug_victronccgx\n") echo "selected" ?> value="bezug_victronccgx">Victron CCGX</option>
 						</select>
 					</div>
 					<div id="wattbezugsonneneco">
@@ -4136,6 +4137,7 @@
 							<option <?php if($pvwattmodulold == "wr_fems\n") echo "selected" ?> value="wr_fems">Fenecon FEMS</option>
 							<option <?php if($pvwattmodulold == "wr_solarworld\n") echo "selected" ?> value="wr_solarworld">Solarworld</option>
 							<option <?php if($pvwattmodulold == "wr_siemens\n") echo "selected" ?> value="wr_siemens">Siemens Speicher</option>
+							<option <?php if($pvwattmodulold == "wr_victronccgx\n") echo "selected" ?> value="wr_victronccgx">Victron CCGX</option>
 						</select>
 					</div>
 
@@ -4775,6 +4777,7 @@
 							<option <?php if($speichermodulold == "speicher_mqtt\n") echo "selected" ?> value="speicher_mqtt">MQTT</option>
 							<option <?php if($speichermodulold == "speicher_fems\n") echo "selected" ?> value="speicher_fems">Fenecon FEMS</option>
 							<option <?php if($speichermodulold == "speicher_siemens\n") echo "selected" ?> value="speicher_siemens">Siemens</option>
+							<option <?php if($speichermodulold == "speicher_victronccgx\n") echo "selected" ?> value="speicher_victronccgx">Victron CCGX</option>
 						</select>
 					</div>
 
