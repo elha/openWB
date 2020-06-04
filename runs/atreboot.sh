@@ -1,7 +1,7 @@
 #!/bin/bash
 (sleep 600; sudo kill $(ps aux |grep '[a]treboot.sh' | awk '{print $2}'); echo 0 > /var/www/html/openWB/ramdisk/bootinprogress) &
 #Ramdisk mit initialen Werten befüllen nach neustart
-. /var/www/html/openWB/openwb.conf
+. /var/www/html/openWB/loadconfig.sh
 sleep 5
 sudo chown -R www-data:www-data /var/www/html/openWB/web/backup
 sudo chown -R www-data:www-data /var/www/html/openWB/web/tools/upload
@@ -37,6 +37,8 @@ echo 0 > /var/www/html/openWB/ramdisk/awattarprice
 echo 1 > /var/www/html/openWB/ramdisk/mqttawattarprice
 echo 0 > /var/www/html/openWB/ramdisk/awattarmaxprice
 echo 1 > /var/www/html/openWB/ramdisk/mqttawattarmaxprice
+echo 0 > /var/www/html/openWB/ramdisk/mqttdurchslp2
+echo 0 > /var/www/html/openWB/ramdisk/mqttdurchslp3
 echo 1 > /var/www/html/openWB/ramdisk/mqtt.log
 echo 1 > /var/www/html/openWB/ramdisk/mqttsoc1
 echo 1 > /var/www/html/openWB/ramdisk/lp1enabled
@@ -145,12 +147,19 @@ echo 0 > /var/www/html/openWB/ramdisk/mqttlastplugstat
 echo 0 > /var/www/html/openWB/ramdisk/mqttlastchargestat
 echo 0 > /var/www/html/openWB/ramdisk/mqttlastchargestats1
 echo 0 > /var/www/html/openWB/ramdisk/mqttlastplugstats1
-echo 0 > /var/www/html/openWB/ramdisk/mqttspeichervorhanden
+echo 2 > /var/www/html/openWB/ramdisk/mqttspeichervorhanden
 echo 3 > /var/www/html/openWB/ramdisk/mqttspeichersoc
 echo 2 > /var/www/html/openWB/ramdisk/mqttspeicherleistung
 echo 0 > /var/www/html/openWB/ramdisk/mqttladeleistungs1
 echo 0 > /var/www/html/openWB/ramdisk/mqttladeleistungs2
 echo 0 > /var/www/html/openWB/ramdisk/mqttladeleistunglp1
+echo 3 > /var/www/html/openWB/ramdisk/mqttlastmanagement
+echo 3 > /var/www/html/openWB/ramdisk/mqttlastmanagements2
+echo 3 > /var/www/html/openWB/ramdisk/mqttlastmanagementlp4
+echo 3 > /var/www/html/openWB/ramdisk/mqttlastmanagementlp5
+echo 3 > /var/www/html/openWB/ramdisk/mqttlastmanagementlp6
+echo 3 > /var/www/html/openWB/ramdisk/mqttlastmanagementlp7
+echo 3 > /var/www/html/openWB/ramdisk/mqttlastmanagementlp8
 echo 0 > /var/www/html/openWB/ramdisk/autolockstatuslp1
 echo 0 > /var/www/html/openWB/ramdisk/autolockstatuslp2
 echo 0 > /var/www/html/openWB/ramdisk/autolockstatuslp3
@@ -326,7 +335,7 @@ touch /var/www/html/openWB/ramdisk/yearly_pvkwhk2
 echo 0 > /var/www/html/openWB/ramdisk/yearly_pvkwhk2
 # SoC Speicher am WR 1
 touch /var/www/html/openWB/ramdisk/speichersoc
-echo 4 > /var/www/html/openWB/ramdisk/speichersoc
+echo 0 > /var/www/html/openWB/ramdisk/speichersoc
 # SoC Speicher am WR 2
 touch /var/www/html/openWB/ramdisk/speichersoc2
 echo 0 > /var/www/html/openWB/ramdisk/speichersoc2
@@ -495,7 +504,7 @@ echo 1 > /var/www/html/openWB/ramdisk/llaktuelllp6
 echo 1 > /var/www/html/openWB/ramdisk/llaktuelllp7
 echo 1 > /var/www/html/openWB/ramdisk/llaktuelllp8
 echo 0 > /var/www/html/openWB/ramdisk/soc
-echo 2 > /var/www/html/openWB/ramdisk/soc1
+echo 0 > /var/www/html/openWB/ramdisk/soc1
 echo 0 > /var/www/html/openWB/ramdisk/soc1vorhanden
 echo 0 > /var/www/html/openWB/ramdisk/lla1
 echo 0 > /var/www/html/openWB/ramdisk/lla2
@@ -509,6 +518,11 @@ echo 0 > /var/www/html/openWB/ramdisk/llkwh
 echo "--" > /var/www/html/openWB/ramdisk/restzeitlp1
 echo "--" > /var/www/html/openWB/ramdisk/restzeitlp2
 echo "--" > /var/www/html/openWB/ramdisk/restzeitlp3
+echo "--" > /var/www/html/openWB/ramdisk/restzeitlp4
+echo "--" > /var/www/html/openWB/ramdisk/restzeitlp5
+echo "--" > /var/www/html/openWB/ramdisk/restzeitlp6
+echo "--" > /var/www/html/openWB/ramdisk/restzeitlp7
+echo "--" > /var/www/html/openWB/ramdisk/restzeitlp8
 echo "0" > /var/www/html/openWB/ramdisk/restzeitlp1m
 echo "0" > /var/www/html/openWB/ramdisk/restzeitlp2m
 echo "0" > /var/www/html/openWB/ramdisk/restzeitlp3m
@@ -589,7 +603,7 @@ if ! grep -Fq "rseenabled=" /var/www/html/openWB/openwb.conf
 then
 	  echo "rseenabled=0" >> /var/www/html/openWB/openwb.conf
 fi
-. /var/www/html/openWB/openwb.conf
+. /var/www/html/openWB/loadconfig.sh
 if (( ladetaster == 1 )); then
 	if ! [ -x "$(command -v nmcli)" ]; then
 		if ps ax |grep -v grep |grep "python /var/www/html/openWB/runs/ladetaster.py" > /dev/null
@@ -886,6 +900,14 @@ if ! grep -Fq "msmoduslp2=" /var/www/html/openWB/openwb.conf
 then
 	  echo "msmoduslp2=0" >> /var/www/html/openWB/openwb.conf
 fi
+if ! grep -Fq "stopchargepvatpercentlp1=" /var/www/html/openWB/openwb.conf
+then
+	echo "stopchargepvatpercentlp1=0" >> /var/www/html/openWB/openwb.conf
+	echo "stopchargepvatpercentlp2=0" >> /var/www/html/openWB/openwb.conf
+	echo "stopchargepvpercentagelp1=90" >> /var/www/html/openWB/openwb.conf
+	echo "stopchargepvpercentagelp2=90" >> /var/www/html/openWB/openwb.conf
+
+fi
 if ! grep -Fq "msmoduslp3=" /var/www/html/openWB/openwb.conf
 then
 	echo "msmoduslp3=0" >> /var/www/html/openWB/openwb.conf
@@ -1111,6 +1133,12 @@ fi
 if ! grep -Fq "speichersoc_http=" /var/www/html/openWB/openwb.conf
 then
 	  echo "speichersoc_http=192.168.0.10/soc" >> /var/www/html/openWB/openwb.conf
+fi
+if ! grep -Fq "speicherekwh_http=" /var/www/html/openWB/openwb.conf
+then
+	  echo "speicherekwh_http=192.168.0.10/eWh" >> /var/www/html/openWB/openwb.conf
+	  echo "speicherikwh_http=192.168.0.10/iWh" >> /var/www/html/openWB/openwb.conf
+
 fi
 if ! grep -Fq "soc_tesla_username=" /var/www/html/openWB/openwb.conf
 then
@@ -1970,6 +1998,14 @@ then
 	echo "rfidlp2start3=000" >> /var/www/html/openWB/openwb.conf
 
 fi
+if ! grep -Fq "rfidlp1start4=" /var/www/html/openWB/openwb.conf
+then
+	echo "rfidlp1start4=000" >> /var/www/html/openWB/openwb.conf
+	echo "rfidlp1start5=000" >> /var/www/html/openWB/openwb.conf
+	echo "rfidlp2start4=000" >> /var/www/html/openWB/openwb.conf
+	echo "rfidlp2start5=000" >> /var/www/html/openWB/openwb.conf
+
+fi
 if ! grep -Fq "rfidstandby=" /var/www/html/openWB/openwb.conf
 then
 	echo "rfidstandby=000" >> /var/www/html/openWB/openwb.conf
@@ -2536,12 +2572,16 @@ then
 	echo "soc_bluelink_interval=30" >> /var/www/html/openWB/openwb.conf
 
 fi
+if ! grep -Fq "soclp1_vin=" /var/www/html/openWB/openwb.conf
+then
+	echo "soclp1_vin=none" >> /var/www/html/openWB/openwb.conf
+fi
 sudo kill $(ps aux |grep '[s]marthomehandler.py' | awk '{print $2}')
 if ps ax |grep -v grep |grep "python3 /var/www/html/openWB/runs/smarthomehandler.py" > /dev/null
 then
 	echo "test" > /dev/null
 else
-	python3 /var/www/html/openWB/runs/smarthomehandler.py &
+	su -c "python3 /var/www/html/openWB/runs/smarthomehandler.py &" pi
 fi
 sudo kill $(ps aux |grep '[m]qttsub.py' | awk '{print $2}')
 if ps ax |grep -v grep |grep "python3 /var/www/html/openWB/runs/mqttsub.py" > /dev/null
@@ -2614,7 +2654,7 @@ then
 
 fi
 
-. /var/www/html/openWB/openwb.conf
+. /var/www/html/openWB/loadconfig.sh
 /var/www/html/openWB/runs/transferladelog.sh
 if (( ledsakt == 1 )); then
 	sudo python /var/www/html/openWB/runs/leds.py startup
@@ -2656,6 +2696,7 @@ ip route get 1 | awk '{print $NF;exit}' > /var/www/html/openWB/ramdisk/ipaddress
 curl -s https://raw.githubusercontent.com/snaptec/openWB/master/web/version > /var/www/html/openWB/ramdisk/vnightly
 curl -s https://raw.githubusercontent.com/snaptec/openWB/beta/web/version > /var/www/html/openWB/ramdisk/vbeta
 curl -s https://raw.githubusercontent.com/snaptec/openWB/stable/web/version > /var/www/html/openWB/ramdisk/vstable
+sudo git -C /var/www/html/openWB show --pretty='format:%ci [%h]' | head -n1 > /var/www/html/openWB/web/lastcommit
 for i in $(seq 1 9);
 do
 	configured=$(timeout 2 mosquitto_sub -C 1 -t openWB/config/get/SmartHome/Devices/$i/device_configured)
@@ -2670,6 +2711,7 @@ mosquitto_pub -t openWB/lp/1/W -r -m "0"
 mosquitto_pub -t openWB/lp/2/W -r -m "0"
 mosquitto_pub -t openWB/lp/3/W -r -m "0"
 mosquitto_pub -t openWB/lp/1/boolChargePointConfigured -r -m "1"
+rm -rf /var/www/html/openWB/web/themes/dark19_01
 (sleep 10; mosquitto_pub -t openWB/set/ChargeMode -r -m $bootmodus) &
 (sleep 10; mosquitto_pub -t openWB/global/ChargeMode -r -m $bootmodus) &
 echo " " > /var/www/html/openWB/ramdisk/lastregelungaktiv
@@ -2678,3 +2720,5 @@ chmod 777 /var/www/html/openWB/ramdisk/smarthome.log
 chmod 777 /var/www/html/openWB/ramdisk/smarthomehandlerloglevel
 echo 0 > /var/www/html/openWB/ramdisk/bootinprogress
 echo 0 > /var/www/html/openWB/ramdisk/updateinprogress
+sudo /bin/su -c "echo 'upload_max_filesize = 300M' > /etc/php/7.0/apache2/conf.d/20-uploadlimit.ini"
+
