@@ -49,23 +49,20 @@ class Connection(object):
         proxy_url: URL for proxy server
         proxy_user: username for proxy server
         proxy_password: password for proxy server
+        id and secret taken from https://www.teslaapi.io/authentication/oauth
         """
         self.proxy_url = proxy_url
         self.proxy_user = proxy_user
         self.proxy_password = proxy_password
-        tesla_client = self.__open("/raw/0a8e0xTJ", baseurl="http://pastebin.com")
-        current_client = tesla_client['v1']
-        self.baseurl = current_client['baseurl']
-        if not self.baseurl.startswith('https:') or not self.baseurl.endswith(('.teslamotors.com','.tesla.com')):
-            raise IOError("Unexpected URL (%s) from pastebin" % self.baseurl)
-        self.api = current_client['api']
+        self.baseurl = "https://owner-api.teslamotors.com"
+        self.api = "/api/1/"
         if access_token:
             self.__sethead(access_token)
         else:
             self.oauth = {
                 "grant_type" : "password",
-                "client_id" : current_client['id'],
-                "client_secret" : current_client['secret'],
+                "client_id" : "81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384",
+                "client_secret" : "c7257eb71a564034f9419ee651c7d0e5f7aa6bfbd18bafb5c5c033b093bb2fa3",
                 "email" : email,
                 "password" : password }
             self.expiration = 0 # force refresh
@@ -136,14 +133,27 @@ class Vehicle(dict):
         super(Vehicle, self).__init__(data)
         self.connection = connection
     
+    def state(self):
+        """Get vehicle data"""
+        return self['state']
+    
     def data_request(self, name):
         """Get vehicle data"""
         result = self.get('data_request/%s' % name)
         return result['response']
     
+    def vehicle_data(self):
+        """Get vehicle data"""
+        result = self.get('vehicle_data')
+        return result['response']
+    
     def wake_up(self):
         """Wake the vehicle"""
         return self.post('wake_up')
+    
+    def charge_start(self):
+        """Start Charging"""
+        return self.post("charge_start")
     
     def command(self, name, data={}):
         """Run the command for the vehicle"""

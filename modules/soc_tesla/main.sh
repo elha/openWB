@@ -1,4 +1,5 @@
 #!/bin/bash
+. /var/www/html/openWB/openwb.conf
 
 # echo $#
 OPENWBBASEDIR=$(cd `dirname $0`/../../ && pwd)
@@ -34,7 +35,7 @@ esac
 
 getAndWriteSoc(){
 	re='^-?[0-9]+$'
-	soclevel=$(sudo python $OPENWBBASEDIR/modules/soc_tesla/tsoc.py $username $password $carnumber | jq .battery_level)
+	soclevel=$(sudo python $OPENWBBASEDIR/modules/soc_tesla/tsoc.py $username $password $carnumber)
 	if  [[ $soclevel =~ $re ]] ; then
 		if (( $soclevel != 0 )) ; then
 			echo $soclevel > $socfile
@@ -42,7 +43,12 @@ getAndWriteSoc(){
 		fi
 	fi
 	echo 0 > $soctimerfile
-	# echo "0 > $soctimerfile"
+        # echo "0 > $soctimerfile"
+}
+
+wakeUp(){
+        sudo python $OPENWBBASEDIR/modules/soc_tesla/twakeup.py $username $password $carnumber
+        echo `date +"%Y%d%mT%H%M%S"` wakeup >> $OPENWBBASEDIR/ramdisk/teslawakeup.log
 }
 
 incrementTimer(){
@@ -56,6 +62,7 @@ if (( ladeleistung > 1000 )); then
 		# echo "$teslatimer < $tintervallladen"
 		incrementTimer
 	else
+                wakeUp
 		getAndWriteSoc
 	fi
 else
