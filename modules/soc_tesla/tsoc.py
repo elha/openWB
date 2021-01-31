@@ -6,7 +6,7 @@ passw = str(sys.argv[2])
 carnumb = int(sys.argv[3])
 
 debug = False
-cachefile='../../ramdisk/soc-tesla-chargestate.json'
+cachefile='/var/www/html/openWB/ramdisk/soc-tesla-chargestate.json'
 soc = 0
 
 c = teslajson.Connection(usern, passw)
