@@ -35,7 +35,7 @@ esac
 
 getAndWriteSoc(){
 	re='^-?[0-9]+$'
-	soclevel=$(sudo python $OPENWBBASEDIR/modules/soc_tesla/tsoc.py $username $password $carnumber)
+	soclevel=$(sudo python3 $OPENWBBASEDIR/modules/soc_tesla/tsoc.py $username $password $carnumber)
 	if  [[ $soclevel =~ $re ]] ; then
 		if (( $soclevel != 0 )) ; then
 			echo $soclevel > $socfile
@@ -47,7 +47,7 @@ getAndWriteSoc(){
 }
 
 wakeUp(){
-        sudo python $OPENWBBASEDIR/modules/soc_tesla/twakeup.py $username $password $carnumber
+        sudo python3 $OPENWBBASEDIR/modules/soc_tesla/twakeup.py $username $password $carnumber
         echo `date +"%Y%d%mT%H%M%S"` wakeup >> $OPENWBBASEDIR/ramdisk/teslawakeup.log
 }
 
